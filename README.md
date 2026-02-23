@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🍊 ZumoFresco
+#  ZumoFresco
 
 ### Vulnerable Juice Shop — Cybersecurity Lab
 
@@ -15,13 +15,13 @@ Laboratorio de ciberseguridad basado en una tienda de zumos ficticia con vulnera
 
 ---
 
-## 🧠 Idea del proyecto
+##  Idea del proyecto
 
 La idea es simple: montar un entorno realista donde convivan una aplicación web vulnerable y un sistema SIEM que la monitorice, simulando un escenario típico de Blue Team / SOC.
 
 La web (**ZumoFresco**) corre en una máquina Debian y tiene vulnerabilidades XSS reales que se pueden explotar desde el navegador. Mientras tanto, una máquina Ubuntu con ELK Stack recoge los logs en tiempo real, permitiendo crear dashboards y alertas para detectar esos ataques.
 
-## 🏗️ Arquitectura
+##  Arquitectura
 
 ```
 ┌──────────────────────────────────┐       ┌──────────────────────────────────┐
@@ -39,7 +39,7 @@ La web (**ZumoFresco**) corre en una máquina Debian y tiene vulnerabilidades XS
 
 Ambas máquinas virtuales corren en local (VirtualBox) dentro de la misma red interna.
 
-## 🌐 La aplicación — ZumoFresco
+##  La aplicación — ZumoFresco
 
 Una tienda online de zumos naturales con diseño moderno, catálogo de productos, sistema de pedidos y sección de comentarios. Construida con Flask, Jinja2 y SQLite.
 
@@ -53,7 +53,7 @@ Una tienda online de zumos naturales con diseño moderno, catálogo de productos
 - Página de contacto y "sobre nosotros"
 - Logging de cada request en formato JSON (preparado para ELK)
 
-## 🔴 Vulnerabilidades
+##  Vulnerabilidades
 
 El lab incluye dos tipos de XSS intencionadas:
 
@@ -99,7 +99,7 @@ Los logs de ZumoFresco se generan en JSON y se envían mediante Filebeat al stac
 }
 ```
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Componente | Tecnología |
 |------------|------------|
@@ -112,7 +112,7 @@ Los logs de ZumoFresco se generan en JSON y se envían mediante Filebeat al stac
 | VM SIEM | Ubuntu 22.04 |
 | Virtualización | VirtualBox |
 
-## 📁 Estructura del proyecto
+##  Estructura del proyecto
 
 ```
 zumofresco/
@@ -134,7 +134,7 @@ zumofresco/
     └── contacto.html       
 ```
 
-## 🎯 Objetivos de aprendizaje
+##  Objetivos de aprendizaje
 
 - Entender cómo funcionan las vulnerabilidades XSS (reflejada y almacenada)
 - Desplegar y configurar un stack ELK completo
@@ -143,14 +143,8 @@ zumofresco/
 - Diseñar reglas de detección para ataques web comunes
 - Practicar el flujo completo de ataque → detección → análisis
 
-## ⚠️ Disclaimer
+##  Disclaimer
 
 Este proyecto es **exclusivamente educativo**. Las vulnerabilidades son intencionadas y el entorno está diseñado para ejecutarse de forma aislada en máquinas virtuales locales. No expongas esta aplicación a Internet ni la utilices contra sistemas sin autorización.
 
 ---
-
-<div align="center">
-
-Hecho con 🍊 y ☕ para la comunidad de ciberseguridad
-
-</div>
