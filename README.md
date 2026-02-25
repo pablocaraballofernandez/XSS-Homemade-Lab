@@ -2,7 +2,7 @@
 
 #  ZumoFresco
 
-### Vulnerable Juice Shop — Cybersecurity Lab
+### Laboratorio de ciberseguridad
 
 Laboratorio de ciberseguridad basado en una tienda de zumos ficticia con vulnerabilidades XSS intencionadas, monitorizada con ELK Stack para detección y análisis de ataques en tiempo real.
 
