@@ -176,7 +176,7 @@ Existen tres tipos principales:
 
 La prevención del XSS requiere aplicar múltiples capas de defensa:
 
-**Escapado de la salida (Output Encoding):** Toda la información procedente del usuario debe escaparse antes de incluirla en el HTML. En Flask con Jinja2, esto se consigue simplemente no utilizando el filtro `|safe`, ya que el motor de plantillas escapa automáticamente las variables por defecto. En el caso concreto de ZumoFresco, bastaría con eliminar el `|safe` de las plantillas `buscar.html` y `detalle.html` para neutralizar ambas vulnerabilidades.
+**Escapado de la salida (Output Encoding):** Toda la información procedente del usuario debe escaparse antes de incluirla en el HTML. En Flask con Jinja2, esto se consigue simplemente no utilizando el filtro `|safe`, ya que el motor de plantillas escapa automáticamente las variables por defecto.
 
 **Validación de la entrada (Input Validation):** Validar y filtrar los datos del usuario en el servidor antes de procesarlos. Rechazar o sanear caracteres especiales de HTML como `<`, `>`, `"`, `'` y `&`. En Python se puede usar `bleach` o `markupsafe` para limpiar el HTML de la entrada.
 
