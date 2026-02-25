@@ -44,13 +44,13 @@ chmod +x install.sh
 
 La instalación finaliza mostrando un resumen con la IP de acceso, la ruta de la aplicación y las rutas de los logs.
 
-![Instalación de ZumoFresco en Debian](/carpeta/7)
+![Instalación de ZumoFresco en Debian](/Images/MontajeWeb/1.jpg)
 
 ### 2.2. Verificación de la aplicación
 
 Una vez completada la instalación, se accede a la web desde el navegador del equipo host a través de la IP de la máquina Debian en el puerto 5000.
 
-![Página principal de ZumoFresco](/carpeta/8)
+![Página principal de ZumoFresco](/Images/MontajeWeb/2.jpg)
 
 La aplicación genera dos ficheros de log en `/opt/zumofresco/logs/`:
 
@@ -79,7 +79,7 @@ chmod +x install-elk.sh
 ./install-elk.sh
 ```
 
-![Instalación del stack ELK en Ubuntu](/carpeta/1)
+![Instalación del stack ELK en Ubuntu](/Images/MontajeELK/1.jpg)
 
 ### 3.2. Pipeline de detección XSS en Logstash
 
@@ -105,10 +105,10 @@ Para conectar los logs de ZumoFresco con el ELK Stack, se instala Filebeat en la
 
 ```bash
 chmod +x install-filebeat.sh
-./install-filebeat.sh <IP_UBUNTU>
+./install-filebeat.sh ip-máquina-kibana-logstash
 ```
 
-![Instalación de Filebeat en Debian](/carpeta/2)
+![Instalación de Filebeat en Debian](/Images/MontajeELK/2.jpg)
 
 ### 4.2. Verificación de la conexión
 
@@ -120,31 +120,26 @@ La conectividad entre ambas máquinas se verifica con el comando `filebeat test 
 
 ### 5.1. XSS Reflejado — Buscador de zumos
 
-La primera vulnerabilidad se encuentra en la funcionalidad de búsqueda. El parámetro `q` de la URL se renderiza directamente en la página sin sanitizar gracias al filtro `|safe` de Jinja2, que desactiva el auto-escape de HTML.
+A continuación, se inyecta un payload XSS directamente desde la barra de búsqueda de la web. El payload utilizado es `<script>alert('ZumoFresco Explotado')</script>`. Al ejecutar la búsqueda, el navegador interpreta el código JavaScript inyectado y muestra el alert, confirmando la explotación del XSS reflejado:
 
-Para comprobarlo, primero se realiza una búsqueda legítima con el término "naranja", que devuelve correctamente los productos que contienen esa palabra:
-
-![Búsqueda legítima de "naranja"](/carpeta/4)
-
-A continuación, se inyecta un payload XSS directamente desde la barra de búsqueda de la web. El payload utilizado es `<script>alert('ZumoFresco Explotado')</script>`:
-
-![Payload XSS en la barra de búsqueda](/carpeta/5)
-
-Al ejecutar la búsqueda, el navegador interpreta el código JavaScript inyectado y muestra el alert, confirmando la explotación del XSS reflejado:
-
-![Alert de XSS reflejado ejecutado](/carpeta/6)
+![Alert de XSS reflejado ejecutado](/Images/Explotación/3.jpg)
 
 Este tipo de ataque se denomina "reflejado" porque el payload viaja en la petición y se refleja en la respuesta del servidor. Un atacante podría distribuir la URL maliciosa por email, redes sociales o mensajería para que la víctima la abra sin sospechar.
 
 Se puede observar que al inyectar el payload directamente en la URL (`/buscar?q=<script>alert('XSS')</script>`), algunos navegadores modernos bloquean la ejecución del script como medida de protección. Sin embargo, la inyección desde el formulario de búsqueda consigue ejecutar el código sin restricciones:
 
-![Intento de XSS reflejado desde la URL](/carpeta/3)
+![Intento de XSS reflejado desde la URL](/Images/Explotación/4.jpg)
 
 ### 5.2. XSS Almacenado — Comentarios de productos
 
 La segunda vulnerabilidad se encuentra en el sistema de comentarios de los productos. Los campos de nombre y texto se almacenan en la base de datos SQLite sin ningún tipo de sanitización y se renderizan con el filtro `|safe`.
 
 Un atacante puede publicar un comentario con código malicioso en cualquier producto. A diferencia del XSS reflejado, este payload persiste en la base de datos y se ejecuta automáticamente para todos los visitantes que accedan a la página de ese producto, sin necesidad de que abran un enlace especial.
+
+![Intento de XSS almacenado desde los comentarios](/Images/Explotación/6.jpg)  
+
+![Intento de XSS almacenado desde los comentarios](/Images/Explotación/7.jpg)
+
 
 ### 5.3. Comparativa entre ambos tipos
 
@@ -159,7 +154,7 @@ Un atacante puede publicar un comentario con código malicioso en cualquier prod
 ### 5.4. Log en Kibana
 Una vez realizado los ataques, podemos revisar como ELK recoge los incidentes y observar los sucedido.
 
-![Kibana/log](/carpeta/5)
+![Kibana/log](/Images/Explotación/5.jpg)
 
 ---
 
