@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}{{ producto.nombre }}{% endblock %}
+
+{% block content %}
+<section class="section product-detail">
+    <div class="container">
+        <a href="{{ url_for('productos') }}" class="back-link">← Volver a zumos</a>
+
+        <div class="detail-grid">
+            <!-- Imagen -->
+            <div class="detail-image">
+                <div class="detail-emoji">
+                    {% if 'naranja' in producto.nombre|lower %}🍊
+                    {% elif 'tropical' in producto.nombre|lower or 'mango' in producto.nombre|lower %}🥭
+                    {% elif 'verde' in producto.nombre|lower or 'detox' in producto.nombre|lower %}🥬
+                    {% elif 'fresa' in producto.nombre|lower %}🍓
+                    {% elif 'acaí' in producto.nombre|lower or 'açaí' in producto.nombre|lower %}🫐
+                    {% elif 'sandía' in producto.nombre|lower %}🍉
+                    {% elif 'zanahoria' in producto.nombre|lower %}🥕
+                    {% elif 'remolacha' in producto.nombre|lower %}🫒
+                    {% elif 'coco' in producto.nombre|lower %}🥥
+                    {% else %}🧃{% endif %}
+                </div>
+                <span class="detail-category">{{ producto.categoria }}</span>
+            </div>
+
+            <!-- Info -->
+            <div class="detail-info">
+                <h1>{{ producto.nombre }}</h1>
+                <p class="detail-desc">{{ producto.descripcion }}</p>
+
+                <div class="detail-ingredients">
+                    <h3>🌿 Ingredientes</h3>
+                    <p>{{ producto.ingredientes }}</p>
+                </div>
+
+                <div class="detail-price">
+                    <span class="price-tag">{{ "%.2f"|format(producto.precio) }}€</span>
+                    <span class="price-unit">/ unidad (500ml)</span>
+                </div>
+
+                <!-- Formulario de pedido -->
+                <form class="order-form" method="POST" action="{{ url_for('hacer_pedido') }}">
+                    <input type="hidden" name="producto_id" value="{{ producto.id }}">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nombre *</label>
+                            <input type="text" name="nombre" required placeholder="Tu nombre">
+                        </div>
+                        <div class="form-group">
+                            <label>Email *</label>
+                            <input type="email" name="email" required placeholder="tu@email.com">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Cantidad</label>
+                            <select name="cantidad">
+                                {% for i in range(1, 11) %}
+                                <option value="{{ i }}">{{ i }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Comentario del pedido</label>
+                        <textarea name="comentario" rows="2" placeholder="Instrucciones especiales..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg">🛒 Hacer Pedido</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ╔══════════════════════════════════════════════════════════╗ -->
+        <!-- ║  🔴 XSS ALMACENADA - SECCIÓN DE COMENTARIOS             ║ -->
+        <!-- ║  Los comentarios se renderizan con |safe                  ║ -->
+        <!-- ║  Un atacante puede guardar <script> en un comentario     ║ -->
+        <!-- ╚══════════════════════════════════════════════════════════╝ -->
+        <div class="comments-section">
+            <h2>💬 Opiniones ({{ comentarios|length }})</h2>
+
+            <!-- Formulario de comentario -->
+            <form class="comment-form" method="POST" action="{{ url_for('comentar', producto_id=producto.id) }}">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tu nombre</label>
+                        <input type="text" name="autor" placeholder="Nombre o apodo" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Tu opinión</label>
+                    <textarea name="texto" rows="3" placeholder="¿Qué te ha parecido este zumo?" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Publicar opinión</button>
+            </form>
+
+            <!-- Lista de comentarios -->
+            {% if comentarios %}
+            <div class="comments-list">
+                {% for com in comentarios %}
+                <div class="comment">
+                    <div class="comment-header">
+                        <strong class="comment-author">{{ com.autor }}</strong>
+                        <span class="comment-date">{{ com.fecha }}</span>
+                    </div>
+                    <!-- 🔴 VULNERABLE: |safe permite renderizar HTML/JS del comentario -->
+                    <div class="comment-body">{{ com.texto|safe }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-comments">
+                <p>Sé el primero en opinar sobre este zumo 🍹</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

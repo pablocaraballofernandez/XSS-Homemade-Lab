@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- ─── Hero ────────────────────────────────────────── -->
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+        <span class="hero-badge">100% Natural</span>
+        <h1>Zumos frescos,<br><em>vida fresca</em></h1>
+        <p>Exprimidos al momento con fruta de temporada. Sin azúcares añadidos, sin conservantes, sin excusas.</p>
+        <div class="hero-actions">
+            <a href="{{ url_for('productos') }}" class="btn btn-primary">Ver Zumos</a>
+            <a href="{{ url_for('nosotros') }}" class="btn btn-outline">Nuestra Historia</a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat">
+                <span class="stat-number">10+</span>
+                <span class="stat-label">Variedades</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Natural</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">0</span>
+                <span class="stat-label">Conservantes</span>
+            </div>
+        </div>
+    </div>
+    <div class="hero-decoration">
+        <div class="fruit fruit-1">🍊</div>
+        <div class="fruit fruit-2">🥭</div>
+        <div class="fruit fruit-3">🍋</div>
+        <div class="fruit fruit-4">🍓</div>
+        <div class="fruit fruit-5">🥝</div>
+    </div>
+</section>
+
+<!-- ─── Destacados ──────────────────────────────────── -->
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag">Favoritos</span>
+            <h2>Zumos Destacados</h2>
+            <p>Los más pedidos por nuestros clientes</p>
+        </div>
+        <div class="product-grid">
+            {% for producto in destacados %}
+            <article class="product-card" style="animation-delay: {{ loop.index * 0.1 }}s">
+                <div class="product-image">
+                    <div class="product-emoji">
+                        {% if 'naranja' in producto.nombre|lower %}🍊
+                        {% elif 'tropical' in producto.nombre|lower or 'mango' in producto.nombre|lower %}🥭
+                        {% elif 'verde' in producto.nombre|lower or 'detox' in producto.nombre|lower %}🥬
+                        {% elif 'fresa' in producto.nombre|lower %}🍓
+                        {% elif 'acaí' in producto.nombre|lower or 'açaí' in producto.nombre|lower %}🫐
+                        {% elif 'sandía' in producto.nombre|lower %}🍉
+                        {% elif 'zanahoria' in producto.nombre|lower %}🥕
+                        {% elif 'remolacha' in producto.nombre|lower %}🫒
+                        {% elif 'coco' in producto.nombre|lower %}🥥
+                        {% else %}🧃{% endif %}
+                    </div>
+                    <span class="product-category">{{ producto.categoria }}</span>
+                </div>
+                <div class="product-info">
+                    <h3>{{ producto.nombre }}</h3>
+                    <p>{{ producto.descripcion[:80] }}{% if producto.descripcion|length > 80 %}...{% endif %}</p>
+                    <div class="product-footer">
+                        <span class="product-price">{{ "%.2f"|format(producto.precio) }}€</span>
+                        <a href="{{ url_for('producto_detalle', producto_id=producto.id) }}" class="btn btn-small">Ver más</a>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        <div class="section-cta">
+            <a href="{{ url_for('productos') }}" class="btn btn-primary">Ver todos los zumos →</a>
+        </div>
+    </div>
+</section>
+
+<!-- ─── Categorías ──────────────────────────────────── -->
+<section class="section section-alt">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag">Explora</span>
+            <h2>Categorías</h2>
+        </div>
+        <div class="categories-grid">
+            {% for cat in categorias %}
+            <a href="{{ url_for('productos', categoria=cat.categoria) }}" class="category-card">
+                <span class="category-icon">
+                    {% if cat.categoria == 'Cítricos' %}🍋
+                    {% elif cat.categoria == 'Smoothies' %}🥤
+                    {% elif cat.categoria == 'Detox' %}🌿
+                    {% elif cat.categoria == 'Superfoods' %}💪
+                    {% elif cat.categoria == 'Limonadas' %}🍹
+                    {% elif cat.categoria == 'Salud' %}❤️
+                    {% elif cat.categoria == 'Natural' %}🌴
+                    {% elif cat.categoria == 'Deportivo' %}⚡
+                    {% elif cat.categoria == 'Refrescantes' %}❄️
+                    {% else %}🧃{% endif %}
+                </span>
+                <span class="category-name">{{ cat.categoria }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ─── Banner ──────────────────────────────────────── -->
+<section class="banner">
+    <div class="container">
+        <h2>¿Primer pedido?</h2>
+        <p>Usa el código <strong>ZUMO10</strong> y obtén un 10% de descuento</p>
+        <a href="{{ url_for('productos') }}" class="btn btn-primary">Pedir ahora</a>
+    </div>
+</section>
+{% endblock %}

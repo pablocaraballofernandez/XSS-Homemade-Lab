@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ZumoFresco{% endblock %} — Zumos Naturales</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <!-- ─── Navbar ─────────────────────────────────────── -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('index') }}" class="nav-logo">
+                <span class="logo-icon">🍊</span>
+                <span class="logo-text">ZumoFresco</span>
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}">Inicio</a>
+                <a href="{{ url_for('productos') }}">Zumos</a>
+                <a href="{{ url_for('nosotros') }}">Nosotros</a>
+                <a href="{{ url_for('contacto') }}">Contacto</a>
+            </div>
+            <form class="nav-search" action="{{ url_for('buscar') }}" method="GET">
+                <input type="text" name="q" placeholder="Buscar zumos..." autocomplete="off">
+                <button type="submit">🔍</button>
+            </form>
+            <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')">☰</button>
+        </div>
+    </nav>
+
+    <!-- ─── Flash Messages ─────────────────────────────── -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-container">
+        {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">
+            {{ message }}
+            <button onclick="this.parentElement.remove()">✕</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- ─── Main Content ───────────────────────────────── -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ─── Footer ─────────────────────────────────────── -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <span class="logo-icon">🍊</span>
+                <span class="logo-text">ZumoFresco</span>
+                <p>Zumos naturales, exprimidos con amor desde 2024.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navegación</h4>
+                <a href="{{ url_for('index') }}">Inicio</a>
+                <a href="{{ url_for('productos') }}">Zumos</a>
+                <a href="{{ url_for('nosotros') }}">Nosotros</a>
+                <a href="{{ url_for('contacto') }}">Contacto</a>
+            </div>
+            <div class="footer-links">
+                <h4>Categorías</h4>
+                <a href="{{ url_for('productos', categoria='Cítricos') }}">Cítricos</a>
+                <a href="{{ url_for('productos', categoria='Smoothies') }}">Smoothies</a>
+                <a href="{{ url_for('productos', categoria='Detox') }}">Detox</a>
+                <a href="{{ url_for('productos', categoria='Superfoods') }}">Superfoods</a>
+            </div>
+            <div class="footer-newsletter">
+                <h4>Newsletter</h4>
+                <p>Recibe ofertas y recetas nuevas</p>
+                <form onsubmit="event.preventDefault(); alert('¡Suscrito!');">
+                    <input type="email" placeholder="tu@email.com">
+                    <button type="submit">→</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 ZumoFresco — Laboratorio de Ciberseguridad</p>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Contacto{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag">Escríbenos</span>
+            <h2>Contacto</h2>
+            <p>¿Tienes alguna pregunta o sugerencia? Estamos aquí para ayudarte.</p>
+        </div>
+
+        <div class="contact-grid">
+            <form class="contact-form" method="POST" action="{{ url_for('contacto') }}">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" name="nombre" required placeholder="Tu nombre">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required placeholder="tu@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Asunto</label>
+                    <select name="asunto">
+                        <option>Consulta general</option>
+                        <option>Pedidos</option>
+                        <option>Sugerencias</option>
+                        <option>Colaboraciones</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Mensaje</label>
+                    <textarea name="mensaje" rows="5" required placeholder="Cuéntanos..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg">Enviar mensaje</button>
+            </form>
+
+            <div class="contact-info">
+                <div class="info-card">
+                    <span>📍</span>
+                    <div>
+                        <h4>Dirección</h4>
+                        <p>Calle de la Fruta, 42<br>Madrid, España</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <span>📞</span>
+                    <div>
+                        <h4>Teléfono</h4>
+                        <p>+34 912 345 678</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <span>✉️</span>
+                    <div>
+                        <h4>Email</h4>
+                        <p>hola@zumofresco.es</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <span>🕐</span>
+                    <div>
+                        <h4>Horario</h4>
+                        <p>Lun - Sáb: 8:00 - 20:00<br>Dom: 9:00 - 14:00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

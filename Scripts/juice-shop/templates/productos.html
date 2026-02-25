@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Nuestros Zumos{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag">Carta</span>
+            <h2>{% if categoria_actual %}{{ categoria_actual }}{% else %}Todos los Zumos{% endif %}</h2>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filter-bar">
+            <a href="{{ url_for('productos') }}" class="filter-tag {% if not categoria_actual %}active{% endif %}">Todos</a>
+            {% for cat in categorias %}
+            <a href="{{ url_for('productos', categoria=cat.categoria) }}" 
+               class="filter-tag {% if cat.categoria == categoria_actual %}active{% endif %}">
+                {{ cat.categoria }}
+            </a>
+            {% endfor %}
+        </div>
+
+        <!-- Grid de productos -->
+        <div class="product-grid">
+            {% for producto in productos %}
+            <article class="product-card" style="animation-delay: {{ loop.index * 0.05 }}s">
+                <div class="product-image">
+                    <div class="product-emoji">
+                        {% if 'naranja' in producto.nombre|lower %}🍊
+                        {% elif 'tropical' in producto.nombre|lower or 'mango' in producto.nombre|lower %}🥭
+                        {% elif 'verde' in producto.nombre|lower or 'detox' in producto.nombre|lower %}🥬
+                        {% elif 'fresa' in producto.nombre|lower %}🍓
+                        {% elif 'acaí' in producto.nombre|lower or 'açaí' in producto.nombre|lower %}🫐
+                        {% elif 'sandía' in producto.nombre|lower %}🍉
+                        {% elif 'zanahoria' in producto.nombre|lower %}🥕
+                        {% elif 'remolacha' in producto.nombre|lower %}🫒
+                        {% elif 'coco' in producto.nombre|lower %}🥥
+                        {% else %}🧃{% endif %}
+                    </div>
+                    <span class="product-category">{{ producto.categoria }}</span>
+                </div>
+                <div class="product-info">
+                    <h3>{{ producto.nombre }}</h3>
+                    <p>{{ producto.descripcion }}</p>
+                    <div class="product-meta">
+                        <small>🌿 {{ producto.ingredientes }}</small>
+                    </div>
+                    <div class="product-footer">
+                        <span class="product-price">{{ "%.2f"|format(producto.precio) }}€</span>
+                        <a href="{{ url_for('producto_detalle', producto_id=producto.id) }}" class="btn btn-small">Pedir</a>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+
+        {% if not productos %}
+        <div class="empty-state">
+            <div class="empty-icon">🫗</div>
+            <h3>No hay zumos en esta categoría</h3>
+            <a href="{{ url_for('productos') }}" class="btn btn-primary">Ver todos</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

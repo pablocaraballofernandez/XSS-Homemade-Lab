@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Buscar{% endblock %}
+
+{% block content %}
+<section class="section page-search">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag">Explorar</span>
+            <h2>Buscar Zumos</h2>
+        </div>
+
+        <!-- Formulario de búsqueda -->
+        <form class="search-form" action="{{ url_for('buscar') }}" method="GET">
+            <div class="search-input-group">
+                <input type="text" name="q" value="{{ query_raw }}" placeholder="¿Qué zumo buscas? (naranja, mango, detox...)" autofocus>
+                <button type="submit" class="btn btn-primary">Buscar 🔍</button>
+            </div>
+        </form>
+
+        {% if query_raw %}
+        <!-- ╔══════════════════════════════════════════════════════════════╗ -->
+        <!-- ║  🔴 XSS REFLEJADA AQUÍ                                      ║ -->
+        <!-- ║  El filtro |safe desactiva el auto-escape de Jinja2          ║ -->
+        <!-- ║  Permite inyectar HTML/JS mediante el parámetro 'q'          ║ -->
+        <!-- ║  Ejemplo: /buscar?q=<script>alert('XSS')</script>            ║ -->
+        <!-- ╚══════════════════════════════════════════════════════════════╝ -->
+        <div class="search-results-header">
+            <p>Resultados para: <strong>{{ query_raw|safe }}</strong></p>
+            <span class="results-count">{{ resultados|length }} zumo(s) encontrado(s)</span>
+        </div>
+
+        {% if resultados %}
+        <div class="product-grid">
+            {% for producto in resultados %}
+            <article class="product-card">
+                <div class="product-image">
+                    <div class="product-emoji">
+                        {% if 'naranja' in producto.nombre|lower %}🍊
+                        {% elif 'tropical' in producto.nombre|lower or 'mango' in producto.nombre|lower %}🥭
+                        {% elif 'verde' in producto.nombre|lower or 'detox' in producto.nombre|lower %}🥬
+                        {% elif 'fresa' in producto.nombre|lower %}🍓
+                        {% elif 'acaí' in producto.nombre|lower or 'açaí' in producto.nombre|lower %}🫐
+                        {% elif 'sandía' in producto.nombre|lower %}🍉
+                        {% elif 'zanahoria' in producto.nombre|lower %}🥕
+                        {% elif 'remolacha' in producto.nombre|lower %}🫒
+                        {% elif 'coco' in producto.nombre|lower %}🥥
+                        {% else %}🧃{% endif %}
+                    </div>
+                    <span class="product-category">{{ producto.categoria }}</span>
+                </div>
+                <div class="product-info">
+                    <h3>{{ producto.nombre }}</h3>
+                    <p>{{ producto.descripcion }}</p>
+                    <div class="product-footer">
+                        <span class="product-price">{{ "%.2f"|format(producto.precio) }}€</span>
+                        <a href="{{ url_for('producto_detalle', producto_id=producto.id) }}" class="btn btn-small">Ver más</a>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">🔍</div>
+            <!-- 🔴 TAMBIÉN VULNERABLE: query_raw|safe sin escapar -->
+            <h3>No encontramos zumos con "{{ query_raw|safe }}"</h3>
+            <p>Prueba con otro término o explora nuestras categorías</p>
+            <a href="{{ url_for('productos') }}" class="btn btn-primary">Ver todos los zumos</a>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">🍹</div>
+            <h3>Busca tu zumo favorito</h3>
+            <p>Escribe el nombre, ingrediente o categoría que te interese</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
